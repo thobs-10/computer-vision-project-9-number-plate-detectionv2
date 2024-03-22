@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name as needed
+  pull_request:
+    branches:
+      - main  # Adjust branch name as needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+      
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Adjust as needed
+      
+    - name: Run tests
+      run: |
+        python -m pytest tests/  # Adjust test directory as needed
+      
+    - name: Lint code
+      run: |
+        pip install flake8
+        flake8 .  # Adjust directory to lint as needed
+      
+    - name: Train model
+      run: |
+        python train_model.py  # Adjust script name as needed
