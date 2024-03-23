@@ -1,0 +1,9 @@
+opencv-python
+tensorflow
+comet-ml
+numpy
+from-root
+PyYAML
+pylint
+
+-e .

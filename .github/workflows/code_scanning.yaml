@@ -1,0 +1,34 @@
+name: CodeQL Analysis
+
+on:
+  push:
+    branches:
+      - staging  # Adjust branch name as needed
+      - dev
+  pull_request:
+    branches:
+      - staging  # Adjust branch name as needed
+      - dev
+jobs:
+  codeql-analysis:
+    name: Analyze code with CodeQL
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        language: [python]  # Add more languages as needed
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+      
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
