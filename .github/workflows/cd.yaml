@@ -3,7 +3,12 @@ name: CD
 on:
   push:
     branches:
-      - main  # Adjust branch name as needed
+      - staging
+      - dev
+  pull_request:
+    branches:
+      - staging
+      - dev
 
 jobs:
   deploy_staging:
@@ -25,7 +30,8 @@ jobs:
       
     - name: Deploy to staging
       run: |
-        python deploy.py --environment staging  # Adjust script name and arguments as needed
+        echo "Deploying to staging"
+      # python deploy.py --environment staging  # Adjust script name and arguments as needed
 
   deploy_production:
     runs-on: ubuntu-latest
@@ -46,4 +52,5 @@ jobs:
       
     - name: Deploy to production
       run: |
-        python deploy.py --environment production  # Adjust script name and arguments as needed
+        echo "Deploying to main branch (production)"
+      # python deploy.py --environment production  # Adjust script name and arguments as needed

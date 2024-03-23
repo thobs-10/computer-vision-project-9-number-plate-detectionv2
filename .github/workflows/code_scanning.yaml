@@ -3,11 +3,12 @@ name: CodeQL Analysis
 on:
   push:
     branches:
-      - main  # Adjust branch name as needed
+      - staging  # Adjust branch name as needed
+      - dev
   pull_request:
     branches:
-      - main  # Adjust branch name as needed
-
+      - staging  # Adjust branch name as needed
+      - dev
 jobs:
   codeql-analysis:
     name: Analyze code with CodeQL
