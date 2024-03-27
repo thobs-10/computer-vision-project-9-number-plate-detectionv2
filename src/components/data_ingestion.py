@@ -37,5 +37,28 @@ class DataIngestion:
         except Exception as e:
             raise AppException(e, sys)
 
-    def extract_zip_file(self, zip_file_path:str):
-        pass
+    def extract_zip_file(self, zip_file_path:str)-> str:
+        
+        try:
+            logging.info('Extracting zip file')
+            feature_store_path = self.data_ingestion_config.feature_store_file_path
+            os.makedirs(feature_store_path, exist_ok= True)
+            with zipfile.ZipFile(zip_file_path, 'r') as zipped_feature_store:
+                zipped_feature_store.extractall(feature_store_path)
+
+            logging.info(f'Extracted file: {feature_store_path}')
+            return feature_store_path
+        except Exception as e:
+            raise AppException(e, sys)
+    
+    def initiate_data_ingestion(self) -> DataIngestionArtifact:
+
+        zip_file_path = self.download_data_from_url()
+        feature_store_path = self.extract_zip_file(zip_file_path)
+
+        data_ingestion_artifact = DataIngestionArtifact(
+            zip_file_path=zip_file_path,
+            feature_store_path=feature_store_path
+        )
+        return data_ingestion_artifact
+    
