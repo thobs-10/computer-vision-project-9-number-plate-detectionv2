@@ -40,4 +40,3 @@ def encode_into_base64(cropped_image_path):
     with open(cropped_image_path, "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read())
         return encoded_image.decode("utf-8")
-    
