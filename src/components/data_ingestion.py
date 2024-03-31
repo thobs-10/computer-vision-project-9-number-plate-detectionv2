@@ -26,7 +26,7 @@ class DataIngestion:
             data_file_name = 'data.zip'
             zip_file_path = os.path.join(zip_download_dir, data_file_name)
             logging.info(f'Downloading file: {zip_file_path} from {dataset_url}')
-
+            # manipulating tte string url for gdown since it had some extra stuff in it.
             file_id = dataset_url.split('/')[-2]
             prefix = ''
             gdown.download(prefix+file_id, zip_file_path)

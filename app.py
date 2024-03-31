@@ -1,9 +1,5 @@
-from src.logger import logging
-from src.exception import AppException
-import sys
-# logging.info('Starting')
+from src.pipeline.training_pipeline import TrainingPipeline
 
-try:
-    a = 2/'s'
-except Exception as e:
-    raise AppException(e, sys)
+training_pipeline = TrainingPipeline()
+# testing data ingestion component
+training_pipeline.run_pipeline()

@@ -8,6 +8,7 @@ class DataIngestionArtifact:
 @dataclass
 class DataValidationArtifact:
     validation_status: str
+    data_status: bool
 
 @dataclass
 class ModelTrainerArtifact:
