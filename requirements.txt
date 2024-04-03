@@ -7,5 +7,6 @@ PyYAML
 pylint
 gdown
 ultralytics
+fastapi
 
 -e .
