@@ -6,5 +6,6 @@ from-root
 PyYAML
 pylint
 gdown
+ultralytics
 
 -e .
