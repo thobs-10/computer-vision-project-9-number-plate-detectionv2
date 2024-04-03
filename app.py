@@ -42,6 +42,8 @@ async def predict():
         print(e)
         result = "Invalid input"
 
+        return jsonify(result)
+
 @app.route('/live', methods=['GET'])
 async def live():
     pass
