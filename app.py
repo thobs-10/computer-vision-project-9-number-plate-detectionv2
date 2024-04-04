@@ -47,6 +47,7 @@ async def predict():
 
 @app.route('/live', methods=['GET'])
 async def live():
+    # to do live camera detections
     pass
 
 if __name__ == '__main__':
