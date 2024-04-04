@@ -49,6 +49,7 @@ async def predict():
 async def live():
     # to do live camera detections
     # added nothing
+    ##
     pass
 
 if __name__ == '__main__':
