@@ -1,4 +1,5 @@
-import sys,os
+import sys
+import os
 from src.pipeline.training_pipeline import TrainingPipeline
 from src.exception import AppException
 from src.utils.main_utils import decode_image, encode_into_base64
