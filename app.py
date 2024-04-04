@@ -41,7 +41,6 @@ async def predict():
     except Exception as e:
         print(e)
         result = "Invalid input"
-
         return jsonify(result)
 
 @app.route('/live', methods=['GET'])
