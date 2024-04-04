@@ -7,6 +7,7 @@ from typing import List
 from uuid import UUID, uuid4
 import requests
 
+
 app = FastAPI()
 
 @app.route("/train")
@@ -49,3 +50,5 @@ async def live():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
+
+
