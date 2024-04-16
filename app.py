@@ -7,11 +7,12 @@ from fastapi import FastAPI
 from typing import List
 from uuid import UUID, uuid4
 import requests
+from flask import Flask, request
 
 
 app = FastAPI()
 
-@app.route("/train")
+@app.route("/api/v1/train")
 async def train():
     try:
         train_pipeline = TrainingPipeline()
@@ -24,14 +25,15 @@ async def train():
 async def root():
     return os.system('python run streamlit.py')
 
-@app.route('/predict', methods=['GET','POST'])
+@app.route('/api/v1/predict', methods=['GET','POST'])
 async def predict():
     try:
         if requests.request() == 'POST':
             data = await request.json()
             image = data['image']
             image = decode_image(image)
-            os.system("cd yolov8/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
+            # we gonna use model from roboflow to detect number plates
+            # os.system("cd yolov8/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
             image = encode_into_base64(image)
             os.system("rm -rf yolov8/runs")
             return {"message": image}
@@ -45,7 +47,7 @@ async def predict():
         result = "Invalid input"
         return jsonify(result)
 
-@app.route('/live', methods=['GET'])
+@app.route('/api/v1/live', methods=['GET'])
 async def live():
     # to do live camera detections
     # added nothing
