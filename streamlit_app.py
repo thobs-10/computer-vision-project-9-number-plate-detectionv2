@@ -60,7 +60,7 @@ class Tracking:
                 # yield annotated_img
                 detections = sv.Detections.from_ultralytics(annotated_img[0])
                 detections = tracker.update_with_detections(detections)
-                
+                # work with the frame if error is detected
 
 
 def main():
