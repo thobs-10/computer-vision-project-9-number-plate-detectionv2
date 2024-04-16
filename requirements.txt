@@ -8,5 +8,7 @@ pylint
 gdown
 ultralytics
 fastapi
+streamlit
+inference
 
 -e .
