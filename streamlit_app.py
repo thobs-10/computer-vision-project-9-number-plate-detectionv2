@@ -23,14 +23,14 @@ class Tracking:
     
     def load_model(self):
         # load a pre-trained yolov8n model
-        self.model = get_model(model_id="np_detection-xgvjf/2")
+        self.model = get_model(model_id="np_detection-xgvjf/2", api_key="JNpKfUfRAHAT2TTAYjnW")
         # return self.model
     
     def model_predictions(self, image):
         # run inference on our chosen image, image can be a url, a numpy array, a PIL image, etc.
-        results = self.model.infer(image)
+        results = self.model.infer(image)[0]
         # load the results into the supervision Detections api
-        detections = sv.Detections.from_inference(results[0].dict(by_alias=True, exclude_none=True))
+        detections = sv.Detections.from_inference(results)
 
         # create supervision annotators
         bounding_box_annotator = sv.BoundingBoxAnnotator()
@@ -44,7 +44,7 @@ class Tracking:
 
         # display the image
         # sv.plot_image(annotated_image)
-        return annotated_image
+        return annotated_image, results
     
     def load_and_process_frames(self, video_file):
         # read the video file
