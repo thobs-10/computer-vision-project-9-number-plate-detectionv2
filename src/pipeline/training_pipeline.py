@@ -17,6 +17,7 @@ class TrainingPipeline:
         # self.data_ingestion_config = DataIngestionConfig
         self.data_ingestion_config = DataIngestionConfig
         self.data_validation_config = DataValidationConfig
+        self.feature_engineering_config = FeatureEngineeringConfig
         self.model_trainer_config = ModelTrainerConfig
 
     def start_data_ingestion(self) -> DataIngestionArtifact:
