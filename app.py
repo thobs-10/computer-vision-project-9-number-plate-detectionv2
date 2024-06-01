@@ -133,12 +133,11 @@ async def predict(
         "prediction_confidence": float(np.max(prediction))
     }
 
-@app.route('/api/v1/live', methods=['GET'])
+
+@app.get('/api/v1/live')
 async def live():
-    # to do live camera detections
-    # added nothing
-    ##
-    pass
+    return StreamingResponse(generate_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
