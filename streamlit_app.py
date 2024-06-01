@@ -144,6 +144,8 @@ def main():
     #     angle_val = st.markdown('0 ms')
 
     frame_placeholder = st.empty()
+    if st.button("Start Live Detection"):
+        st.video("http://localhost:8000/api/v1/live", format="video/mp4")
     # display the tracked video during inference
     # canvas, gray_init_frame = club_tracking.create_canvas(vid)
     # result_frame = club_tracking.load_and_process_video(vid, canvas, gray_init_frame)
