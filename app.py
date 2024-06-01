@@ -91,31 +91,47 @@ async def train():
     except Exception as e:
         raise AppException(e, sys)
     
-@app.route('/')
-async def root():
-    return os.system('python run streamlit.py')
 
-@app.route('/api/v1/predict', methods=['GET','POST'])
-async def predict():
-    try:
-        if requests.request() == 'POST':
-            data = await request.json()
-            image = data['image']
-            image = decode_image(image)
-            # we gonna use model from roboflow to detect number plates
-            # os.system("cd yolov8/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
-            image = encode_into_base64(image)
-            os.system("rm -rf yolov8/runs")
-            return {"message": image}
-    except ValueError as val:
-        print(val)
-        return Response("Value not found inside  json data")
-    except KeyError:
-        return Response("Key value error incorrect key passed")
-    except Exception as e:
-        print(e)
-        result = "Invalid input"
-        return jsonify(result)
+@app.post("/upload/")
+async def upload_file(
+    form_data: Annotated[DataRequest, Depends(parse_form_data)],
+    file: UploadFile = File(...)
+):
+    return {
+        "name": form_data.name,
+        "uuid": str(form_data.uuid),
+        "filename": file.filename,
+        "content_type": file.content_type
+    }
+
+@app.post("/api/v1/predict")
+async def predict(
+    form_data: Annotated[DataRequest, Depends(parse_form_data)],
+    file: UploadFile = File(...)
+):
+    # Ensure the uploaded file is an image
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Uploaded file is not an image")
+    
+    # Read the image file
+    image_bytes = await file.read()
+    image = Image.open(io.BytesIO(image_bytes))
+    image.save("data/inputImage.jpg")
+
+    # preprocess the image
+    preprocessed_image = preprocessed_image(image)
+    
+    # Make a prediction using the trained model
+    prediction = model.predict(preprocessed_image)
+    predicted_class = np.argmax(prediction, axis=1)[0]
+    
+    # Return the prediction as a JSON response
+    return {
+        "name": form_data.name,
+        "uuid": str(form_data.uuid),
+        "predicted_class": int(predicted_class),
+        "prediction_confidence": float(np.max(prediction))
+    }
 
 @app.route('/api/v1/live', methods=['GET'])
 async def live():
