@@ -3,11 +3,21 @@ import os
 from src.pipeline.training_pipeline import TrainingPipeline
 from src.exception import AppException
 from src.utils.main_utils import decode_image, encode_into_base64
-from fastapi import FastAPI
+import uvicorn
+from fastapi import FastAPI, File, Form, UploadFile, Depends, HTTPException, Response
+from fastapi.responses import StreamingResponse
 from typing import List
-from uuid import UUID, uuid4
+from uuid import UUID, uuid4, Annotated
 import requests
-from flask import Flask, request
+# from flask import Flask, request
+from pydantic import BaseModel
+from tkinter import Image
+from PIL import Image
+import numpy as np
+import io
+import tensorflow as tf
+import ultralytics
+import cv2
 
 
 app = FastAPI()
