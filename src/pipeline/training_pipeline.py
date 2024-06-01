@@ -40,6 +40,16 @@ class TrainingPipeline:
         except Exception as e:
             raise AppException(e, sys)
     
+    def start_feature_engineering(self, data_validation_artifact: DataValidationArtifact) -> FeatureEngineeringArtifact:
+        try:
+            logging.info('Starting feature engineering')
+            feature_engineering = FeatureEngineering(self.feature_engineering_config, data_validation_artifact)
+            feature_engineering_artifact = feature_engineering.initiate_feature_engineering()
+            return feature_engineering_artifact
+        except Exception as e:
+            raise AppException(e, sys)
+        
+    
     def start_model_trainer(self)-> ModelTrainerArtifact:
         logging.info("Starting model Trainer")
         try:
