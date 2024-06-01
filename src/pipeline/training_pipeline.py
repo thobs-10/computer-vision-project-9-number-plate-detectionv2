@@ -4,12 +4,13 @@ import sys
 from src.logger import logging
 from src.exception import AppException
 from src.components.data_ingestion import DataIngestion
+from src.components.feaature_engineering import FeatureEngineering
 from src.components.data_validation import DataValidation
 from src.components.model_trainer import ModelTrainer
 
-from src.entity.config_entity import (DataIngestionConfig, DataValidationConfig, ModelTrainerConfig)
+from src.entity.config_entity import (DataIngestionConfig, DataValidationConfig, ModelTrainerConfig, FeatureEngineeringConfig)
 
-from src.entity.artifacts_entity import (DataIngestionArtifact, DataValidationArtifact, ModelTrainerArtifact)
+from src.entity.artifacts_entity import (DataIngestionArtifact, DataValidationArtifact, ModelTrainerArtifact, FeatureEngineeringArtifact)
 
 class TrainingPipeline:
     def __init__(self) -> None:
