@@ -1,5 +1,6 @@
 # import a utility function for loading Roboflow models
 from inference import get_model
+from inference.models.utils import get_model
 # import supervision to visualize our results
 import supervision as sv
 # import cv2 to helo load our image
