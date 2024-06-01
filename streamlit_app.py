@@ -114,6 +114,10 @@ def main():
 
         st.sidebar.text('Input Video')
         st.sidebar.video(demo_bytes)
+        # tracking 
+        tracking = Tracking()
+        tracking.load_and_process_frames(demo_file)
+        st.video(demo_bytes,format="video/mp4")
     
     else:
         tfflie.write(video_file_buffer.read())
