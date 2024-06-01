@@ -19,6 +19,66 @@ import tensorflow as tf
 import ultralytics
 import cv2
 
+class DataRequest(BaseModel):
+    name: str
+    uuid: uuid4
+
+async def parse_form_data(
+    name: Annotated[str, Form(...)],
+    uuid: Annotated[uuid4, Form(...)]
+) -> DataRequest:
+    return DataRequest(name=name, uuid=uuid)
+
+def preprocess_image(image: Image.Image) -> np.array:
+    # preprocess the image to the format expected by the model
+    image = image.resize((224, 224))  # Example: resize to 224x224
+    image_array = np.array(image)
+    image_array = image_array / 255.0  # Example: normalize the image
+    image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
+    return image_array
+
+def detect_number_plate_frame(frame):
+    results = model(frame)
+    detections = results.xyxy[0]  # Get xyxy format bounding boxes
+
+    for detection in detections:
+        x1, y1, x2, y2, conf, cls = detection
+        if conf > 0.5:  # Confidence threshold
+            label = model.names[int(cls)]
+            if label == "license plate":
+                color = (0, 255, 0)
+                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
+                cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            
+    return frame
+
+def generate_frames():
+
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        raise RuntimeError("Could not start camera.")
+    
+    while True:
+        ok, frame = cap.read()
+        if not ok:
+            raise RuntimeError("Could not read frame from camera.")
+        
+        frame = detect_number_plate_frame(frame)
+
+        # Encode frame as JPEG
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    
+    cap.release()
+
+
+
+# Load your pre-trained model
+model = tf.keras.models.load_model("path_to_your_model.h5")
 
 app = FastAPI()
 
