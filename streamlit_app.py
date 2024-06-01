@@ -55,11 +55,11 @@ class Tracking:
             self.load_model()
             if ok:
                 # process the frame
-                annotated_img = self.model_predictions(frame)
+                annotated_img, results = self.model_predictions(frame)
                 # display the frame
                 # sv.plot_image(annotated_img)
                 # yield annotated_img
-                detections = sv.Detections.from_ultralytics(annotated_img[0])
+                detections = sv.Detections.from_roboflow(results)
                 detections = tracker.update_with_detections(detections)
                 # work with the frame if error is detected
 
@@ -67,11 +67,13 @@ class Tracking:
 def main():
     st.title('Number-plate Tracking')
 
-    detection_file = 'data\\test_video_3.mp4'
-    tfflie = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
-    vid = cv2.VideoCapture(detection_file)
-    tfflie.name = detection_file
-    demo_vid = open(tfflie.name, 'rb')
+    # detection_file = 'data\\test_video_3.mp4'
+    # tfflie = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
+    # vid = cv2.VideoCapture(detection_file)
+    # tfflie.name = detection_file
+    # demo_vid = open(tfflie.name, 'rb')
+    # demo_bytes = demo_vid.read()
+    # st.video(demo_bytes,format="video/mp4")
     
     st.sidebar.title('Settings')
     
@@ -98,12 +100,6 @@ def main():
         for each_class in assiigned_classes:
             assigned_class_ids.append(names.index(each_class))
 
-    # angles of interest
-#     angle = st.sidebar.radio(
-#     "Angle of interest?",
-#     ["Spine", "Arms", "leg stand"],
-#     index=None,
-# )
     # uploading video files
     video_file_buffer = st.sidebar.file_uploader('upload video', type=['mp4','mov','avi','m4v','asf'])
     demo_file = 'data\\test_video_3.mp4'
