@@ -9,6 +9,6 @@ gdown
 ultralytics
 fastapi
 streamlit
-# inference
+inference
 
 -e .
