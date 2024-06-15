@@ -13,6 +13,18 @@ class FeatureEngineering:
         self.data_validation_artifact = data_validation_artifact
     
     def initiate_feature_engineering(self) -> FeatureEngineeringArtifact:
+        """
+        Initiates the feature engineering process.
+
+        Parameters:
+        self (FeatureEngineering): The instance of the FeatureEngineering class.
+        Returns:
+        FeatureEngineeringArtifact: An object containing the path to the transformed data.
+
+        Raises:
+        AppException: If an error occurs during the feature engineering process.
+
+        """
         try:
             logging.info('Starting feature engineering')
             # Load validated data
