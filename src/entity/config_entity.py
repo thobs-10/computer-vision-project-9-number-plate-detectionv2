@@ -32,6 +32,12 @@ class DataValidationConfig:
     required_file_list = DATA_VALIDATION_ALL_REQUIRED_FILES
 
 @dataclass
+class FeatureEngineeringConfig:
+    def __init__(self, feature_params: dict):
+        self.feature_params = feature_params
+
+
+@dataclass
 class ModelTrainerConfig:
     model_trainer_dir = os.path.join(
         training_pipeline_config.artifacts_dir, MODEL_TRAINER_DIR_NAME
