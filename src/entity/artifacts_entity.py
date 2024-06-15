@@ -6,9 +6,14 @@ class DataIngestionArtifact:
     feature_store_path : str
 
 @dataclass
+class FeatureEngineeringArtifact:
+    transformed_data_path: str
+
+@dataclass
 class DataValidationArtifact:
     validation_status: str
     data_status: bool
+    vaildated_data_path: str
 
 @dataclass
 class ModelTrainerArtifact:

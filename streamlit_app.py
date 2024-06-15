@@ -1,5 +1,6 @@
 # import a utility function for loading Roboflow models
 from inference import get_model
+from inference.models.utils import get_model
 # import supervision to visualize our results
 import supervision as sv
 # import cv2 to helo load our image
@@ -22,14 +23,14 @@ class Tracking:
     
     def load_model(self):
         # load a pre-trained yolov8n model
-        self.model = get_model(model_id="np_detection-xgvjf/2")
+        self.model = get_model(model_id="np_detection-xgvjf/2", api_key="JNpKfUfRAHAT2TTAYjnW")
         # return self.model
     
     def model_predictions(self, image):
         # run inference on our chosen image, image can be a url, a numpy array, a PIL image, etc.
-        results = self.model.infer(image)
+        results = self.model.infer(image)[0]
         # load the results into the supervision Detections api
-        detections = sv.Detections.from_inference(results[0].dict(by_alias=True, exclude_none=True))
+        detections = sv.Detections.from_inference(results)
 
         # create supervision annotators
         bounding_box_annotator = sv.BoundingBoxAnnotator()
@@ -43,7 +44,7 @@ class Tracking:
 
         # display the image
         # sv.plot_image(annotated_image)
-        return annotated_image
+        return annotated_image, results
     
     def load_and_process_frames(self, video_file):
         # read the video file
@@ -54,11 +55,11 @@ class Tracking:
             self.load_model()
             if ok:
                 # process the frame
-                annotated_img = self.model_predictions(frame)
+                annotated_img, results = self.model_predictions(frame)
                 # display the frame
                 # sv.plot_image(annotated_img)
                 # yield annotated_img
-                detections = sv.Detections.from_ultralytics(annotated_img[0])
+                detections = sv.Detections.from_roboflow(results)
                 detections = tracker.update_with_detections(detections)
                 # work with the frame if error is detected
 
@@ -66,11 +67,13 @@ class Tracking:
 def main():
     st.title('Number-plate Tracking')
 
-    detection_file = 'data\\test_video_3.mp4'
-    tfflie = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
-    vid = cv2.VideoCapture(detection_file)
-    tfflie.name = detection_file
-    demo_vid = open(tfflie.name, 'rb')
+    # detection_file = 'data\\test_video_3.mp4'
+    # tfflie = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
+    # vid = cv2.VideoCapture(detection_file)
+    # tfflie.name = detection_file
+    # demo_vid = open(tfflie.name, 'rb')
+    # demo_bytes = demo_vid.read()
+    # st.video(demo_bytes,format="video/mp4")
     
     st.sidebar.title('Settings')
     
@@ -97,12 +100,6 @@ def main():
         for each_class in assiigned_classes:
             assigned_class_ids.append(names.index(each_class))
 
-    # angles of interest
-#     angle = st.sidebar.radio(
-#     "Angle of interest?",
-#     ["Spine", "Arms", "leg stand"],
-#     index=None,
-# )
     # uploading video files
     video_file_buffer = st.sidebar.file_uploader('upload video', type=['mp4','mov','avi','m4v','asf'])
     demo_file = 'data\\test_video_3.mp4'
@@ -117,6 +114,10 @@ def main():
 
         st.sidebar.text('Input Video')
         st.sidebar.video(demo_bytes)
+        # tracking 
+        tracking = Tracking()
+        tracking.load_and_process_frames(demo_file)
+        st.video(demo_bytes,format="video/mp4")
     
     else:
         tfflie.write(video_file_buffer.read())
@@ -143,6 +144,8 @@ def main():
     #     angle_val = st.markdown('0 ms')
 
     frame_placeholder = st.empty()
+    if st.button("Start Live Detection"):
+        st.video("http://localhost:8000/api/v1/live", format="video/mp4")
     # display the tracked video during inference
     # canvas, gray_init_frame = club_tracking.create_canvas(vid)
     # result_frame = club_tracking.load_and_process_video(vid, canvas, gray_init_frame)
