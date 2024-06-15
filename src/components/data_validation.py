@@ -8,6 +8,19 @@ from src.entity.artifacts_entity import (DataIngestionArtifact,
 
 class DataValidation:
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact, data_validation_config : DataValidationConfig) -> None:
+        """
+        Initialize a new instance of DataValidation class.
+
+        Parameters:
+        data_ingestion_artifact (DataIngestionArtifact): The artifact resulting from data ingestion process.
+        data_validation_config (DataValidationConfig): The configuration for data validation process.
+
+        Returns:
+        None: This method does not return any value.
+
+        Raises:
+        AppException: If any error occurs during the initialization process.
+        """
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
@@ -15,6 +28,18 @@ class DataValidation:
             raise AppException(e, sys)
         
     def validate_data_within_files(self)-> bool:
+        """
+        Validates the data within the files present in the feature store path.
+
+        Parameters:
+        self (DataValidation): The instance of the DataValidation class.
+
+        Returns:
+        bool: Returns True if all the directories within the files are not empty, else returns False.
+
+        Raises:
+        AppException: If any error occurs during the validation process.
+        """
         try:
             isPresent = None
             all_files_from_ingestion = os.listdir(self.data_ingestion_artifact.feature_store_path) 
@@ -39,19 +64,34 @@ class DataValidation:
         
     
     def validate_all_files(self)-> bool:
+        """
+        Validates all files present in the feature store path against the required file list.
+
+        Parameters:
+        self (DataValidation): The instance of the DataValidation class.
+
+        Returns:
+        bool: Returns True if all required files are present and validated, else returns False.
+
+        Raises:
+        AppException: If any error occurs during the validation process.
+        """
         try:
             validation_status = None
-
+            # Get all files from the feature store path
             all_files_from_ingestion = os.listdir(self.data_ingestion_artifact.feature_store_path)
 
             for file in all_files_from_ingestion:
+                # Check if the file is in the required file list
                 if file not in self.data_validation_config.required_file_list:
+                    # If not, set validation status to False and log it
                     validation_status = False
                     os.makedirs(self.data_validation_config.data_validation_dir, exist_ok=True)
                     with open(self.data_validation_config.data_validation_dir, 'w') as f:
                         f.write(f'Validation Status: {validation_status}')
                     logging.info(f'Validation Status: {validation_status}')
                 else:
+                    # If yes, set validation status to True and log it
                     validation_status = True
                     # isPresent = self.validate_data_within_files(file)
                     os.makedirs(self.data_validation_config.data_validation_dir, exist_ok=True)
